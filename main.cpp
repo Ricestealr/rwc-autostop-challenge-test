@@ -405,7 +405,6 @@ int main() {
                     }
                 }
             }
-            
 
             //  TOGGLE AUTOSTOP
             if (challenge.autoStopActive == 0) {

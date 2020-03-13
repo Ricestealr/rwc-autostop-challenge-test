@@ -62,9 +62,9 @@ void ChallengeMode::regenThrottleOn() {
 
 void ChallengeMode::regenThrottleOff() {
     // CLOSE THE BATTERY CONTACTOR
-//    if (regenBrakingActive == false) {  // If regen braking is not active and using the supercaps, allow capacitor to pre-charge from batteries
-//        contactCapCharge = 1;           // Close the supercap charging contactor
-//    }
+    if (regenBrakingActive == false) {  // If regen braking is not active and using the supercaps, allow capacitor to pre-charge from batteries
+        contactCapCharge = 1;           // Close the supercap charging contactor
+    }
     
     contactBatt = 1;                    // Close the battery contactor so power comes from batteries
     regenThrottleActive = false;        // Flag to indicate that regen throttling is off
@@ -73,16 +73,16 @@ void ChallengeMode::regenThrottleOff() {
 
 bool ChallengeMode::regenBrakingOn() {
     // TURN ON REGEN BRAKING
-    if (superCapVoltage == 0) {             // If super caps are not full
-        contactCapCharge = 0;               // Open the super cap pre-cahrging contactor
-        contactBatt = 0;                    // Open battery contactor so all power comes from supercaps
+//     if (superCapVoltage == 0) {             // If super caps are not full
+//      contactCapCharge = 0;               // Open the super cap pre-cahrging contactor
+//        contactBatt = 0;                    // Open battery contactor so all power comes from supercaps
         regenBrakingActive = true;          // Flag to indicate that regen throttling is on
         pc.printf("Regen Braking On\r\n");
         return 1;                           // Return 1 if regen braking switched on
-    }
-    else {
-        return 0;                           // Return 0 is regen braking didnt turn on due to full supercaps
-    }
+//    }
+//    else {
+//        return 0;                           // Return 0 is regen braking didnt turn on due to full supercaps
+//    }
 }
 
 void ChallengeMode::regenBrakingOff() {
