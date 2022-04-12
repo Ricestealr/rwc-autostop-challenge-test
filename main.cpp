@@ -138,22 +138,34 @@ void brakeControl(int brakeRate) {
         else {  // MECHANICAL BRAKING 
             switch (brakeRate) {
                 case 0:     // NO BRAKING
-                    brakeValve32 = 1;
-                    brakeValve22 = 1;
+                    brakeValve32 = 1;//(PF_2)
+                    brakeValve22 = 1;//(PG_1)
                     break;
-                
-                case 1:
+                    
+                case 1:           //One brake high 
                     motor1.throttle(0.0f);
-                    brakeValve32 = 0;
-                    if (pressureSwitch1.read() == 0) {
-                        brakeValve22 = 0;
-                        pc.printf("Pressure 1 Reached");
-                    }
-                    else {
-                        brakeValve22 = 1;   
-                        pc.printf("Braking Level 1\r\n");
-                    }
+                    brakeValve32 = 0;//(PF_2)
+                    brakeValve22 = 1;//(PG_1)
                     break;
+                case 2 ... 4 :    //Two brake high
+                    motor1.throttle(0.0f);
+                    brakeValve32 = 0;//(PF_2)
+                    brakeValve22 = 0;//(PG_1)
+                    break;
+                    
+
+//                case 1:
+//                    motor1.throttle(0.0f);
+//                    brakeValve32 = 0;
+//                    if (pressureSwitch1.read() == 0) {
+//                        brakeValve22 = 0;
+//                        pc.printf("Pressure 1 Reached");
+//                    }
+//                    else {
+//                        brakeValve22 = 1;   
+//                        pc.printf("Braking Level 1\r\n");
+//                    }
+//                    break;
                     
 //                case 2:
 //                    motor1.throttle(0.0f);
@@ -168,11 +180,11 @@ void brakeControl(int brakeRate) {
 //                    }
 //                    
 //                    break;
-                    
-                case 2 ... 4:
-                    motor1.throttle(0.0f);
-                    brakeValve32 = 0;
-                    brakeValve22 = 1;
+//                    
+//                case 2 ... 4:
+//                    motor1.throttle(0.0f);
+//                    brakeValve32 = 0;
+//                    brakeValve22 = 1;
                     
 //                    if (pressureSwitch3.read() == 0) {
 //                        brakeValve22 = 0;
@@ -182,7 +194,7 @@ void brakeControl(int brakeRate) {
 //                        brakeValve22 = 1;  
 //                        pc.printf("Braking Level 3\r\n");
 //                    }
-                    break;
+//                    break;
                     
                     
                 default:    // NO BRAKING
