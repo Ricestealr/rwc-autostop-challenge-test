@@ -7,6 +7,8 @@
 #include "rtc.h"
 #include "motor.h"
 #include "challenge.h"
+#include <sstream>
+using std::string;
 
 //  SET UP REMOTE CONTROL COMMS
 SPI remoteControl(PE_14, PE_13, PE_12);   // (SPI_MOSI, SPI_MISO, SPI_SCK)
@@ -23,6 +25,14 @@ int driveMode = 2;      // Drive mode - fwd(0), rev(1), park(2)
 bool emergencyStopActive = false;
 
 // FUNCTIONS
+
+//Display Function for data logger
+void DisplaySerial(){ 
+    std::stringstream displayline;
+    displayline << "Blackbox# " << " Motor Accelerator: " << motorAccelerator << "Emergency Stop Status: " << emergencyStopActive << "Drive Mode: " << driveMode ; // + "Current Speed: " +(int)dashboard.currentSpeed;
+    string disp=displayline.str();
+    pc.printf("%s",disp);
+    }
 
 void startupHealthCheck() {
        
@@ -343,6 +353,7 @@ int main() {
     unsigned long lastErrorMillis = 0;
 
     while(1) {
+        DisplaySerial();//Datalogger Chai Funciton
      
         while(remote.commsGood == true) {
             
