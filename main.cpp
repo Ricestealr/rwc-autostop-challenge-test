@@ -353,9 +353,10 @@ int main() {
     unsigned long lastErrorMillis = 0;
 
     while(1) {
-        DisplaySerial();//Datalogger Chai Funciton
+        
      
         while(remote.commsGood == true) {
+            DisplaySerial();//Datalogger Chai Funciton
             
             // PING
             remote.commsCheck();
