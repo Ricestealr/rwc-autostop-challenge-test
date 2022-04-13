@@ -67,20 +67,25 @@ void startupHealthCheck() {
     }
 }
 
-void emergencyStop() {
+void emergencyStop()  {    //Emergency Stop Function
 //    pc.printf("Emergency Stop Active\r\n");
     if (emergencyStopActive == false) {
         
         emergencyStopActive = true;
                 
-        motor1.disengage();     // Disengage both motors
+        motor1.disengage();
+        
+        //Setting brakes to high
+         brakeValve32 = 0;//(PF_2)
+         brakeValve22 = 0;//(PG_1)
+             // Disengage both motors
 //        motor2.disengage();
         
-        motor1.setPark();       // Clear Motor Directions
+    //    motor1.setPark(); Redundancy as disengage function simply calls SetPark      // Clear Motor Directions
 //        motor2.setPark();
         
-        if (rtc_output.read() == 1) {
-            rtc.getTriggerCause();        // Get RTC input status
+        if (rtc_output.read() == 1) {  //Check RTC pin out
+            rtc.getTriggerCause();        // Get RTC input status 
         }
     }
 }
@@ -518,7 +523,7 @@ int main() {
 //                    pc.printf("ParkMode = %d", inParkMode);
                     
                     if (inParkMode == false) {
-                        pc.printf("Train in park mode.\r\n");
+                        pc.printf("Train in park mode.\r\n"); //why?
                     }
                     
                     if (emergencyStopActive == true && rtc_output.read() == 0) {   // Clear emergency stop flag
