@@ -45,7 +45,7 @@ void emergencyStop()  {    //Emergency Stop Function
     motor1.throttle(0);
 
     //Disengage motor
-    motor1.disengage();
+    motor1.setPark();
 
     //Setting brakes to high
     brakeValve32 = 0;//(PF_2)
