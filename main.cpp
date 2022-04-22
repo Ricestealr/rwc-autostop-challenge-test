@@ -29,10 +29,10 @@ bool emergencyStopActive = false;
 //Display Function for data logger
 void DisplaySerial(){ 
     std::stringstream displayline;
-    displayline << "Blackbox# " << " Motor Accelerator: " << motorAccelerator << " Brake 3/2: " << brakeValve32 <<  " Brake 2/2: " << brakeValve22 <<  " Speed: " << dashboard.currentSpeed  " Drive Mode: " << driveMode;  
+    displayline << "Blackbox# " << " Motor Accelerator: " << motorAccelerator << " Brake 3/2: " << brakeValve32 <<  " Brake 2/2: " << brakeValve22 <<  " Speed: " << dashboard.currentSpeed << " Distance: " << dashboard.currentDistance << " Drive Mode: " << driveMode;
     //displayline << "Blackbox# " << " Motor Accelerator: " << motorAccelerator << " " << "Emergency Stop Status: " << emergencyStopActive << " "  << "Drive Mode: " << driveMode  << " " ; // + "Current Speed: " +(int)dashboard.currentSpeed;
     string disp=displayline.str();
-    pc.printf("%s \n",disp);
+    pc.printf("%s \n",disp.c_str());
     }
  
 //Emergency Stop 
