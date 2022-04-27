@@ -27,21 +27,21 @@ bool emergencyStopActive = false;
 // FUNCTIONS
 
 //Display Function for data logger
-void DisplaySerial(){ 
-    std::stringstream displayline;
-    displayline << "Blackbox# " << " Motor Accelerator: " << motorAccelerator << " Brake 3/2: " << brakeValve32 <<  " Brake 2/2: " << brakeValve22 <<  " Speed: " << dashboard.currentSpeed << " Distance: " << dashboard.currentDistance << " Drive Mode: " << driveMode;
-    //displayline << "Blackbox# " << " Motor Accelerator: " << motorAccelerator << " " << "Emergency Stop Status: " << emergencyStopActive << " "  << "Drive Mode: " << driveMode  << " " ; // + "Current Speed: " +(int)dashboard.currentSpeed;
-    string disp=displayline.str();
-    pc.printf("%s \n",disp.c_str());
-    }
- 
-//Emergency Stop 
+void DisplaySerial() {
+  std::stringstream displayline;
+  displayline << "Blackbox# " << " Motor Accelerator: " << motorAccelerator << " Brake 3/2: " << brakeValve32 <<  " Brake 2/2: " << brakeValve22 <<  " Speed: " << dashboard.currentSpeed << " Distance: " << dashboard.currentDistance << " Drive Mode: " << driveMode;
+  //displayline << "Blackbox# " << " Motor Accelerator: " << motorAccelerator << " " << "Emergency Stop Status: " << emergencyStopActive << " "  << "Drive Mode: " << driveMode  << " " ; // + "Current Speed: " +(int)dashboard.currentSpeed;
+  string disp = displayline.str();
+  pc.printf("%s \n", disp.c_str());
+}
+
+//Emergency Stop
 void emergencyStop()  {    //Emergency Stop Function
   //    pc.printf("Emergency Stop Active\r\n");
   if (emergencyStopActive == false) {
 
     emergencyStopActive = true;
-    
+
     //Set brake throttle to zero before disconnected, think is why we had the runaway train imo
     motor1.throttle(0);
 
@@ -57,7 +57,7 @@ void emergencyStop()  {    //Emergency Stop Function
   }
 }
 
-//Brake code 
+//Brake code
 void brakeControl(int brakeRate) {
   if (driveMode == 2) {   // PARK MODE
     //  All Mechanical brakes applied
@@ -301,14 +301,7 @@ int main() {
           systemOn = false;       // WILL STOP ABOVE HERE NEXT LOOP
           pc.printf("Start Switch is Off\r\n");
         }
-        
-        ////Default Brakes on when speed is 0
-        //if(dashboard.getCurrentSpeed() ==0 && motor1.throttle == 0)
-        //{
-         //    brakeValve32 = 0;//(PF_2)
-           //  brakeValve22 = 0;//(PG_1)
-        //}
-        /////////////////////Left it commented out for now  as unsure of the motor throttle check or to use the set speed variable 
+
         //Set foward
         if (driveMode != 0 && remote.forward == 0) {
           driveMode = 0;
@@ -327,6 +320,9 @@ int main() {
         }
         ////Park Mode
         if (driveMode == 2) {                             //place in park mode if selected by driver
+          //brakeValve32 = 0;//(PF_2) Already placed in the brake code, but didnt work? So will need to double check
+          //brakeValve22 = 0;//(PG_1)
+
           if (inParkMode == false) {
             pc.printf("Train in park mode.\r\n"); //why?
           }
@@ -362,6 +358,8 @@ int main() {
             //Use controls from remote
             else {  // OTHERWISE INPUT THROTTLE FROM REMOTE
               if (remote.throttle > 0) {   // If joystick pushed upwards = throttle
+
+
                 /////////////////////////Innovation braking start
                 if (challenge.innovationActive == true) {
                   pc.printf("Collision Detection in Control\r\n");
@@ -381,7 +379,14 @@ int main() {
               } // remote.throttle
               ///if nothing set to 0
               else {
-                speedControl(0);
+                ////Default Brakes on when speed is 0
+                if (dashboard.currentSpeed == 0 && remote.throttle == 0) {
+                  brakeControl(4);
+                }
+                /////////////////////Left it commented out for now  as unsure of the motor throttle check or to use the set speed variable
+                else {
+                  speedControl(0);
+                }
               }
             }
 
