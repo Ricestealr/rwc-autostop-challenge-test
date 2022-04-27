@@ -9,7 +9,7 @@
 class ChallengeMode {
     public:
         // CONSTURCTOR
-        ChallengeMode(InterruptIn& autoStopTrigger, Dashboard& dashboard, Remote& remote, Motor& motor1);
+        ChallengeMode(InterruptIn& autoStopTrigger, Dashboard& dashboard, Remote& remote, Motor& motor1); 
         
         // FUNCTIONS
         // Regen Mode

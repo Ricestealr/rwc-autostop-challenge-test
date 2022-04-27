@@ -109,7 +109,7 @@ void ChallengeMode::autoStopTriggered() {
         autoStopThrottle = _remote.throttle;
         
         _dashboard.currentDistance = 0.00f;                         // Reset the distance-travelled counter to 0
-//        timeToReachTarget = targetDistance / (autoStopCruiseSpeed * 1000 / 3600);   // Time(s) = Distance(m) / Speed(converted to m/s)
+        timeToReachTarget = targetDistance / (autoStopCruiseSpeed * 1000 / 3600);   // Time(s) = Distance(m) / Speed(converted to m/s)
         decelerationGradient = (autoStopCruiseSpeed - 1) / (targetDistance - 1);    // m = y / x → to get to 1kph at 24m, leaving ~ 4 seconds to get to target of 25m
         pc.printf("Auto-Stop Triggered\r\n");
     }
@@ -118,7 +118,7 @@ void ChallengeMode::autoStopTriggered() {
 void ChallengeMode::autoStopControl() {
     // FUNCTION TO MANAGE THE LOCO THROTTLE AND BRAKING WHEN AUTO-STOPPING
     remainingDistance = targetDistance - _dashboard.currentDistance;        // Calculate remaining distance from target distance
-//    timeToReachTarget = int(_dashboard.currentSpeed) > 0 ? remainingDistance / _dashboard.currentSpeed : 999;
+    timeToReachTarget = int(_dashboard.currentSpeed) > 0 ? remainingDistance / _dashboard.currentSpeed : 999;
     
     // FOLLOWING DECELERATION GRADIENT
     
@@ -268,8 +268,9 @@ int ChallengeMode::innovationControl(int requestedThrottle) {
     if (stopLoco == true) { // IF SENSORS INDICATE TRAIN SHOULD STOP
     
 //        // APPLY MECHANICAL BRAKES
-//        brakeValve32 = 0;
-//        brakeValve22 = 1;
+           brakeValve32 = 0;
+           brakeValve22 = 1;
+           //Half braking to control throttle
 
         // APPLY E-BRAKE
         rtc_Trigger = 0;
