@@ -301,7 +301,14 @@ int main() {
           systemOn = false;       // WILL STOP ABOVE HERE NEXT LOOP
           pc.printf("Start Switch is Off\r\n");
         }
-
+        
+        ////Default Brakes on when speed is 0
+        //if(dashboard.getCurrentSpeed() ==0 && motor1.throttle == 0)
+        //{
+         //    brakeValve32 = 0;//(PF_2)
+           //  brakeValve22 = 0;//(PG_1)
+        //}
+        /////////////////////Left it commented out for now  as unsure of the motor throttle check or to use the set speed variable 
         //Set foward
         if (driveMode != 0 && remote.forward == 0) {
           driveMode = 0;
