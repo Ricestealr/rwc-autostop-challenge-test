@@ -64,6 +64,7 @@ void brakeControl(int brakeRate) {
     motor1.throttle(0.0f);
     brakeValve32 = 0;
     brakeValve22 = 0;
+    inParkMode = true; //This toggle was missing, could be the issue
   }
   else {//REGEN BRAKING
     if (challenge.regenBrakingActive == true) { // REGEN BRAKING WITH OVERVOLTAGE SAFETY CHECK
@@ -322,8 +323,9 @@ int main() {
         if (driveMode == 2) {                             //place in park mode if selected by driver
           //brakeValve32 = 0;//(PF_2) Already placed in the brake code, but didnt work? So will need to double check
           //brakeValve22 = 0;//(PG_1)
+          motor1.setPark(); //function set to here instead of after print.
 
-          if (inParkMode == false) {
+          if (inParkMode == true) { //changes from false to true
             pc.printf("Train in park mode.\r\n"); //why?
           }
 
@@ -332,8 +334,8 @@ int main() {
           }
 
           led_parkMode = 1;
-          inParkMode = true;      // Stop above debug print from displaying more than once
-          motor1.setPark();
+         // inParkMode = true;      // Stop above debug print from displaying more than once // commented out as unsure if needed                                 
+          
         }
 
         ////Drive
