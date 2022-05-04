@@ -29,7 +29,7 @@ bool emergencyStopActive = false;
 //Display Function for data logger
 void DisplaySerial() {
   std::stringstream displayline;
-  displayline << "Blackbox# " << " Motor Accelerator: " << motorAccelerator << " Brake 3/2: " << brakeValve32 <<  " Brake 2/2: " << brakeValve22 <<  " Speed: " << dashboard.currentSpeed << " Distance: " << dashboard.currentDistance << " Drive Mode: " << driveMode;
+  displayline << "Blackbox# " << " Motor Accelerator: " << motorAccelerator << " Brake 3/2: " << brakeValve32 <<  " Brake 2/2: " << brakeValve22 <<  " Speed: " << dashboard.currentSpeed << " Distance: " << dashboard.currentDistance << " Drive Mode: " << driveMode << "\n";
   //displayline << "Blackbox# " << " Motor Accelerator: " << motorAccelerator << " " << "Emergency Stop Status: " << emergencyStopActive << " "  << "Drive Mode: " << driveMode  << " " ; // + "Current Speed: " +(int)dashboard.currentSpeed;
   string disp = displayline.str();
   pc.printf("%s \n", disp.c_str());
@@ -59,14 +59,14 @@ void emergencyStop()  {    //Emergency Stop Function
 
 //Brake code
 void brakeControl(int brakeRate) {
-  if (driveMode == 2) {   // PARK MODE
+ // if (driveMode == 2) {   // PARK MODE
     //  All Mechanical brakes applied
-    motor1.throttle(0.0f);
-    brakeValve32 = 0;
-    brakeValve22 = 0;
-    inParkMode = true; //This toggle was missing, could be the issue
-  }
-  else {//REGEN BRAKING
+   // motor1.throttle(0.0f);
+    //brakeValve32 = 0;
+    //brakeValve22 = 0;
+   // inParkMode = true; //This toggle was missing, could be the issue
+  //} Commented out this block as instead of setting parkmode in the brake function outside the main loop, there is a set park mode in the main code where this function can be invoked as brakeControl(4) 
+  //else {//REGEN BRAKING
     if (challenge.regenBrakingActive == true) { // REGEN BRAKING WITH OVERVOLTAGE SAFETY CHECK
       if (brakeRate > 0) {
         motor1.setPark();
@@ -100,7 +100,7 @@ void brakeControl(int brakeRate) {
           break;
       }
     }
-  }
+  //}
   return;
 }
 
@@ -323,18 +323,20 @@ int main() {
         if (driveMode == 2) {                             //place in park mode if selected by driver
           //brakeValve32 = 0;//(PF_2) Already placed in the brake code, but didnt work? So will need to double check
           //brakeValve22 = 0;//(PG_1)
+          brakeControl(4);
           motor1.setPark(); //function set to here instead of after print.
 
-          if (inParkMode == true) { //changes from false to true
-            pc.printf("Train in park mode.\r\n"); //why?
-          }
+          
 
           if (emergencyStopActive == true && rtc_output.read() == 0) {   // Clear emergency stop flag
             emergencyStopActive = false;
           }
 
           led_parkMode = 1;
-         // inParkMode = true;      // Stop above debug print from displaying more than once // commented out as unsure if needed                                 
+          inParkMode = true;      // Stop above debug print from displaying more than once 
+          if (inParkMode == true) { //changes from false to true
+            pc.printf("Train in park mode.\r\n"); //why?
+          }                                
           
         }
 
