@@ -7,7 +7,7 @@ Dashboard::Dashboard(InterruptIn& hallSensor) : _hallSensor(hallSensor) {    // 
     _hallSensor.rise(this, &Dashboard::tachoInterrupt);           // Register everytime hall sensor is detected
     tachoTimer.start();                         // Timer for counting time between hall sensor triggers
     
-    numberOfMagnets = 1;    // How many magnets on the wheels
+    numberOfMagnets = 8;    // How many magnets on the wheels
     
     currentSpeed = 0.00f;
     passedTime_ms = 0.00f;
