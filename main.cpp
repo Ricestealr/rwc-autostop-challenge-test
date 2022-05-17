@@ -367,12 +367,7 @@ int main() {
                 /////////////////////////Innovation braking end
                 //normal throttle control
                 else {
-                  if (remote.throttle == 0 and dashboard.currentSpeed == 0){
-                      brakeControl(2);    
-                      }
-                else {
                   speedControl(remote.throttle);
-                  }
                   pc.printf("Throttling: %d\r\n", remote.throttle);
                 }
               } // remote.throttle
