@@ -72,7 +72,7 @@ DigitalOut contactCapCharge(PG_11);   // C-CHA
 
 //mechanical braking and other air components.
 DigitalOut brakeValve32(PF_2);
-DigitalOut brakeValve22(PG_1);
+DigitalOut brakeValve22(PF_8);
 DigitalOut whistleValve32(PG_15);
 
 DigitalIn pressureSwitch1(PC_13, PullUp);
