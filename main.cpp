@@ -30,8 +30,8 @@ bool emergencyStopActive = false;
 void DisplaySerial(){ 
     std::stringstream displayline;
     displayline << "Blackbox# " << " Motor Accelerator: " << motorAccelerator << " Brake 3/2: " << brakeValve32 <<  " Brake 2/2: " << brakeValve22 <<  " Speed: " << dashboard.currentSpeed << " Distance: " << dashboard.currentDistance << " Drive Mode: " << driveMode << "\n";
-    string disp=displayline.str();
-    pc.printf("%s \n",disp);
+    string disp = displayline.str();
+    pc.printf("%s \n", disp.c_str());
     }
  
 //Emergency Stop 
@@ -367,7 +367,12 @@ int main() {
                 /////////////////////////Innovation braking end
                 //normal throttle control
                 else {
+                  if (remote.throttle == 0 and dashboard.currentSpeed == 0){
+                      brakeControl(2);    
+                      }
+                else {
                   speedControl(remote.throttle);
+                  }
                   pc.printf("Throttling: %d\r\n", remote.throttle);
                 }
               } // remote.throttle
