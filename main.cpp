@@ -29,7 +29,7 @@ bool emergencyStopActive = false;
 //Display Function for data logger
 void DisplaySerial(){ 
     std::stringstream displayline;
-    displayline << "Blackbox# " << " Motor Accelerator: " << motorAccelerator << " " << "Emergency Stop Status: " << emergencyStopActive << " "  << "Drive Mode: " << driveMode  << " " ; // + "Current Speed: " +(int)dashboard.currentSpeed;
+    displayline << "Blackbox# " << " Motor Accelerator: " << motorAccelerator << " Brake 3/2: " << brakeValve32 <<  " Brake 2/2: " << brakeValve22 <<  " Speed: " << dashboard.currentSpeed << " Distance: " << dashboard.currentDistance << " Drive Mode: " << driveMode << "\n";
     string disp=displayline.str();
     pc.printf("%s \n",disp);
     }
@@ -390,7 +390,7 @@ int main() {
       }   // END IF (SYSTEMON == TRUE)
       //If train is switched on and in start do this end///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-      wait_ms(500);   // SLOW DOWN THE SYSTEM (REMOTE CANT KEEP UP)
+      wait_ms(25);   // SLOW DOWN THE SYSTEM (REMOTE CANT KEEP UP)
     }   // END WHILE(COMMSGOOD)
     pc.printf("Main Loop Skipped Due To Emergency Status\r\n");
     emergencyStop();    // Emergency stop if comms lost with remote controller
