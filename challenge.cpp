@@ -107,7 +107,7 @@ void ChallengeMode::autoStopTriggered() {
         autoStopInProgress = true;                                  // Flag that auto-stop is in progress and fully autonomous
         autoStopCruiseSpeed = _dashboard.currentSpeed;              // Set the speed the loco was going at the point of triggering
         autoStopThrottle = _remote.throttle;
-        
+        whistleValve32 = 1;
         _dashboard.currentDistance = 0.00f;                         // Reset the distance-travelled counter to 0
 //        timeToReachTarget = targetDistance / (autoStopCruiseSpeed * 1000 / 3600);   // Time(s) = Distance(m) / Speed(converted to m/s)
         decelerationGradient = (autoStopCruiseSpeed - 1) / (targetDistance - 1);    // m = y / x → to get to 1kph at 24m, leaving ~ 4 seconds to get to target of 25m
