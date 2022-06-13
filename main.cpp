@@ -70,9 +70,9 @@ void brakeControl(int brakeRate) {
         //motor1.setPark();
         motor1.brake(brakeRate);
       }
-      else {
-        motor1.setForward();
-      }
+      //else {
+        //motor1.setForward();
+      //}
     }
     else {  // MECHANICAL BRAKING
       switch (brakeRate) {
