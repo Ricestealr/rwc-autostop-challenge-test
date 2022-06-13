@@ -67,7 +67,7 @@ void brakeControl(int brakeRate) {
   else {//REGEN BRAKING
     if (challenge.regenBrakingActive == true) { // REGEN BRAKING WITH OVERVOLTAGE SAFETY CHECK
       if (brakeRate > 0) {
-        motor1.setPark();
+        motor1.brake(brakeRate);
       }
       else {
         motor1.setForward();
