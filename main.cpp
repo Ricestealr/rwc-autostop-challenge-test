@@ -57,7 +57,7 @@ void emergencyStop()  {    //Emergency Stop Function
 }
 
 //Brake code 
-void brakeControl(int brakeRate) {
+void brakeControl(int brakeRate) { //set brake rate to float for regen
   if (driveMode == 2) {   // PARK MODE
     //  All Mechanical brakes applied
     motor1.throttle(0.0f);
@@ -66,15 +66,39 @@ void brakeControl(int brakeRate) {
   }
   else {//REGEN BRAKING
     if (challenge.regenBrakingActive == true) { // REGEN BRAKING WITH OVERVOLTAGE SAFETY CHECK
-      if (brakeRate > 0) {
         //motor1.setPark();
-        motor1.brake(brakeRate);
+        switch (brakeRate) { //using switch cases like throttle to set regen braking brake tate with values between 0.1f and 1.0f which represents analog pin out values upto 3.3V
+        
+            
+            default:
+            break;
+            
+            case 0:
+            motor1.brake(0.0f);
+            break;
+
+            case 1:
+            motor1.brake(0.25f);
+            break;
+            
+            case 2:
+            motor1.brake(0.5f);
+            break;
+
+            case 3:
+            motor1.brake(0.75f);
+            break;
+            
+            case 4:
+            motor1.brake(1.0f);
+            break;
       }
       //else {
         //motor1.setForward();
       //}
-    }
+    
     else {  // MECHANICAL BRAKING
+   // int bR=static_cast <int>(brakeRate); //type casting brake rate to int for mechanical cases
       switch (brakeRate) {
         case 0:     // NO BRAKING
           brakeValve32 = 1;//(PF_2)
