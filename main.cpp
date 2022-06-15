@@ -64,6 +64,7 @@ void brakeControl(int brakeRate) { //set brake rate to float for regen
     motor1.throttle(0.0f);
     brakeValve32 = 0;
     brakeValve22 = 0;
+    //inParkMode=true;
       //brakes1.BrakesOn();
   }
   else {//REGEN BRAKING
@@ -345,7 +346,8 @@ int main() {
           motor1.throttle(0);
         }
         ////Park Mode
-        if (driveMode == 2) {                             //place in park mode if selected by driver
+        if (driveMode == 2) {     
+        brakeControl(4);                        //place in park mode if selected by driver
           if (inParkMode == false) {
             pc.printf("Train in park mode.\r\n"); //why?
           }
