@@ -1,6 +1,6 @@
 #include <mbed.h>
 #include "millis.h"
-
+#include "brakes.h"
 #include "definitions.h"
 #include "remoteControl.h"
 #include "dashboard.h"
@@ -20,6 +20,7 @@ Dashboard dashboard(hallSensor);
 RoundTrainCircuit rtc(rtc_1, rtc_2, rtc_3, rtc_4, rtc_5, rtc_6, rtc_7, rtc_override);
 Motor motor1(motorAccelerator, motorBrake, keySwitchM1, directionFwd, directionRev, footswitchM1, seatM1, inchFwdM1, speedLimit2M1, speedLimit3M1);
 ChallengeMode challenge(autoStopTrigger, dashboard, remote, motor1);
+Brakes brakes1();
 
 int driveMode = 2;      // Drive mode - fwd(0), rev(1), park(2)
 bool emergencyStopActive = false;
@@ -63,6 +64,7 @@ void brakeControl(int brakeRate) { //set brake rate to float for regen
     motor1.throttle(0.0f);
     brakeValve32 = 0;
     brakeValve22 = 0;
+      //brakes1.BrakesOn();
   }
   else {//REGEN BRAKING
     if (challenge.regenBrakingActive == true) { // REGEN BRAKING WITH OVERVOLTAGE SAFETY CHECK
@@ -95,7 +97,7 @@ void brakeControl(int brakeRate) { //set brake rate to float for regen
       }
       //else {
         //motor1.setForward();
-      //}
+      }
     
     else {  // MECHANICAL BRAKING
    // int bR=static_cast <int>(brakeRate); //type casting brake rate to int for mechanical cases

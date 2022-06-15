@@ -71,8 +71,8 @@ DigitalOut contactCapCharge(PG_11);   // C-CHA
 //DigitalOut contactMtr2(PG_8);
 
 //mechanical braking and other air components.
-DigitalOut brakeValve32(PF_2);
-DigitalOut brakeValve22(PF_8);
+DigitalOut brakeValve32(PD_3); //brake pins updated wire 90 back brake
+DigitalOut brakeValve22(PC_0); // brake pins updated  wire 91 front brake
 DigitalOut whistleValve32(PG_15);
 
 DigitalIn pressureSwitch1(PC_13, PullUp);
