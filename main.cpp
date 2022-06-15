@@ -22,10 +22,10 @@ Motor motor1(motorAccelerator, motorBrake, keySwitchM1, directionFwd, directionR
 ChallengeMode challenge(autoStopTrigger, dashboard, remote, motor1);
 Brakes brakes;
 
-int driveMode = 2;      // Drive mode - fwd(0), rev(1), park(2)
-bool emergencyStopActive = false;
+int driveMode = 2;// Drive mode - fwd(0), rev(1), park(2)
+bool emergencyStopActive = false; //default state for emergency stop being active
 
-// FUNCTIONS
+////////FUNCTIONS
 
 //Display Function for data logger
 void DisplaySerial(){ 
