@@ -20,7 +20,7 @@ Dashboard dashboard(hallSensor);
 RoundTrainCircuit rtc(rtc_1, rtc_2, rtc_3, rtc_4, rtc_5, rtc_6, rtc_7, rtc_override);
 Motor motor1(motorAccelerator, motorBrake, keySwitchM1, directionFwd, directionRev, footswitchM1, seatM1, inchFwdM1, speedLimit2M1, speedLimit3M1);
 ChallengeMode challenge(autoStopTrigger, dashboard, remote, motor1);
-Brakes brakes1();
+Brakes brakes;
 
 int driveMode = 2;      // Drive mode - fwd(0), rev(1), park(2)
 bool emergencyStopActive = false;
@@ -34,102 +34,29 @@ void DisplaySerial(){
     string disp = displayline.str();
     pc.printf("%s \n", disp.c_str());
     }
- 
-//Emergency Stop 
-void emergencyStop()  {    //Emergency Stop Function
-  //    pc.printf("Emergency Stop Active\r\n");
-  if (emergencyStopActive == false) {
-
-    emergencyStopActive = true;
-    
-    //Set brake throttle to zero before disconnected, think is why we had the runaway train imo
-    motor1.throttle(0);
-
-    //Disengage motor
-    motor1.disengage();
-
-    //Setting brakes to high
-    brakeValve32 = 0;//(PF_2)
-    brakeValve22 = 0;//(PF_8)
-    if (rtc_output.read() == 1) {  //Check RTC pin out
-      rtc.getTriggerCause();        // Get RTC input status
-    }
-  }
-}
 
 //Brake code 
 void brakeControl(int brakeRate) { //set brake rate to float for regen
   if (driveMode == 2) {   // PARK MODE
     //  All Mechanical brakes applied
-    motor1.throttle(0.0f);
-    brakeValve32 = 0;
-    brakeValve22 = 0;
-    //inParkMode=true;
-      //brakes1.BrakesOn();
+      brakes.ParkMode(motor1);
   }
-  else {//REGEN BRAKING
-    if (challenge.regenBrakingActive == true) { // REGEN BRAKING WITH OVERVOLTAGE SAFETY CHECK
-        //motor1.setPark();
-        switch (brakeRate) { //using switch cases like throttle to set regen braking brake tate with values between 0.1f and 1.0f which represents analog pin out values upto 3.3V
-        
-            
-            default:
-            break;
-            
-            case 0:
-            motor1.brake(0.0f);
-            break;
-
-            case 1:
-            motor1.brake(0.25f);
-            break;
-            
-            case 2:
-            motor1.brake(0.5f);
-            break;
-
-            case 3:
-            motor1.brake(0.75f);
-            break;
-            
-            case 4:
-            motor1.brake(1.0f);
-            break;
-      }
-      //else {
-        //motor1.setForward();
+  {//REGEN BRAKING
+  
+  if (challenge.regenBrakingActive == true) { // REGEN BRAKING WITH OVERVOLTAGE SAFETY CHECK
+       brakes.RegenControl(brakeRate,motor1);
       }
     
     else {  // MECHANICAL BRAKING
-   // int bR=static_cast <int>(brakeRate); //type casting brake rate to int for mechanical cases
-      switch (brakeRate) {
-        case 0:     // NO BRAKING
-          brakeValve32 = 1;//(PF_2)
-          brakeValve22 = 1;//(PF_8)
-          break;
-
-        case 1:           //HALF BRAKING
-          motor1.throttle(0.0f);
-          brakeValve32 = 0;//(PF_2)
-          brakeValve22 = 1;//(PF_8)
-          break;
-
-        case 2 ... 4 :    //FULL BRAKING
-          motor1.throttle(0.0f);
-          brakeValve32 = 0;//(PF_2)
-          brakeValve22 = 0;//(PF_8)
-          break;
-
-        default:    // NO BRAKING
-          brakeValve32 = 1;//(PF_2)
-          brakeValve22 = 1;//(PF_8)
-          break;
-      }
+     brakes.MechanicalBraking(brakeRate,motor1); // calls mechanical braking 
     }
   }
   return;
 }
-
+void emergencyStop()
+{
+    brakes.EmergencyStop(motor1,rtc,emergencyStopActive); //invokes emergency stop code from brakes class 
+}
 //Motor code
 void speedControl(int commandedSpeed) {
   switch (commandedSpeed) {
@@ -347,7 +274,7 @@ int main() {
         }
         ////Park Mode
         if (driveMode == 2) {     
-        brakeControl(4);                        //place in park mode if selected by driver
+             brakes.ParkMode(motor1);                        //place in park mode if selected by driver
           if (inParkMode == false) {
             pc.printf("Train in park mode.\r\n"); //why?
           }
@@ -390,7 +317,7 @@ int main() {
                   speedControl(innovationThrottle);
 
                   if (innovationThrottle == 0) {
-                    emergencyStop();   // emergency Brake if obstacle detected
+                      emergencyStop(); // emergency Brake if obstacle detected
                   }
                 }
                 /////////////////////////Innovation braking end

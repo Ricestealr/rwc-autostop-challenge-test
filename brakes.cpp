@@ -1,28 +1,33 @@
 #include "brakes.h"
 #include <mbed.h>
 #include "definitions.h"
-void Brakes::FrontBrakeOn()
+Brakes::Brakes()
+{
+
+}
+void Brakes::FrontBrakeOn() //turns on front mechanical brake
 {
     brakeValve22=0;
     brakeValve32=1;
 }
 
-void Brakes::RearBrakeOn()
+void Brakes::RearBrakeOn() //turns on rear mechanical brake
 {
     brakeValve22=1;
     brakeValve32=0;
 }
-void Brakes::BrakesOn()
+void Brakes::BrakesOn() //turns on both mechanical brakes
 {
     brakeValve22=0;
     brakeValve32=0;
 }
 
-void Brakes::ParkMode()
+void Brakes::ParkMode(Motor motor) //Disengage motor and apply friction brakes
 {
+     motor.setPark();
      BrakesOn();
 }
-void Brakes::MechanicalBraking(int brakeRate, Motor motor)
+void Brakes::MechanicalBraking(int brakeRate, Motor motor) //friction braking cases
 {
 switch (brakeRate) {
         case 0:     // NO BRAKING
@@ -47,7 +52,7 @@ switch (brakeRate) {
           }
 }
 
-void Brakes::RegenControl(int ratecontrol,Motor motor)
+void Brakes::RegenControl(int ratecontrol,Motor motor) //graduated braking control
 {
     switch (ratecontrol)
     {
@@ -75,3 +80,24 @@ void Brakes::RegenControl(int ratecontrol,Motor motor)
             break;
       }
     }
+void Brakes::EmergencyStop(Motor motor,RoundTrainCircuit rtc, bool emergencyStopActive)
+{
+    if (emergencyStopActive == false) {
+
+    emergencyStopActive = true;
+    
+    //Set brake throttle to zero before disconnected, think is why we had the runaway train imo
+    motor.throttle(0.0f);
+
+    //Disengage motor
+    motor.disengage();
+
+    //Setting brakes to high
+    brakeValve22=0;
+    brakeValve32=0;
+    
+    if (rtc_output.read() == 1) {  //Check RTC pin out
+      rtc.getTriggerCause();        // Get RTC input status
+    }
+  }
+}
