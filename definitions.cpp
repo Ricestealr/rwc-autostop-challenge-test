@@ -29,6 +29,7 @@ DigitalIn rtc_override(PG_14, PullUp);
 // RTC Outputs
 DigitalOut rtc_Trigger(PD_14);
 
+
 // Output LEDs
 //DigitalOut led_rtcOutput();    // No need as RTC has led output
 //DigitalOut led_emergencyBrake(PE_11);
@@ -80,3 +81,14 @@ DigitalIn pressureSwitch2(PC_1, PullUp);
 DigitalIn pressureSwitch3(PC_15, PullUp);
 //DigitalIn brakePressure(PH_0);      // NOT INSTALLED
 DigitalIn mainlinePressure(PH_1, PullUp);
+
+///Eergy Storage;
+
+AnalogIn vref_powercab(PA_3);
+AnalogIn vref_supercap(PF_5);
+AnalogIn vout_powercab(PC_3);
+AnalogIn vout_supercap(PF_3);
+
+///Lights
+DigitalOut FrontLight(PB_14);
+DigitalOut BackLight(PB_15);

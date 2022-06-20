@@ -109,6 +109,23 @@ void speedControl(int commandedSpeed) {
       break;
   }
 }
+///Energy Storage
+//energy storage display code
+void EnergyStorage()
+{
+    float current_powercab=((2*vout_powercab)-vref_powercab)*250; //voltage change to current conversion
+    float current_supercap=((2*vout_supercap)-vref_supercap)*250;
+    int t=1; //1 second interval
+    int C= 250; //Capacitance Value
+    float energy_supercap = (1/2) * (current_supercap * current_supercap) * (t*t) / C;
+    float energy_powercab = (1/2) * (current_powercab * current_powercab) * (t*t) / C;
+    int scap = static_cast<int>(energy_supercap);
+    int pcab = static_cast<int>(energy_powercab);
+    remote.sendData(2,scap);
+    remote.sendData(2,pcab);
+    
+}
+
 
 int main() {
   pc.baud(115200);
@@ -143,6 +160,9 @@ int main() {
 
       // ALLOW BRAKES TO BE OPERATED
       brakeControl(remote.braking);
+      
+      //Energy Storage Display
+      EnergyStorage();
 
       // SOUND WHISTLE IF WHISTLE BUTTON PRESSED
       if (remote.whistle == 0) {
@@ -260,11 +280,15 @@ int main() {
         if (driveMode != 0 && remote.forward == 0) {
           driveMode = 0;
           motor1.setForward();
+          FrontLight=1;
+          BackLight=0;
         }
         //Set reverse
         if (driveMode != 1 && remote.reverse == 0) {
           driveMode = 1;
           motor1.setReverse();
+          BackLight=1;
+          FrontLight=0;
         }
         //Set park
         if (driveMode != 2 && remote.park == 0) {
@@ -275,6 +299,8 @@ int main() {
         ////Park Mode
         if (driveMode == 2) {     
              brakes.ParkMode(motor1);                        //place in park mode if selected by driver
+          BackLight=0;
+          FrontLight=0;
           if (inParkMode == false) {
             pc.printf("Train in park mode.\r\n"); //why?
           }

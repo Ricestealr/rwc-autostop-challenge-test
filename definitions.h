@@ -81,5 +81,18 @@ extern DigitalIn pressureSwitch2;
 extern DigitalIn pressureSwitch3;
 //extern DigitalIn brakePressure;
 extern DigitalIn mainlinePressure;
+//
 
+
+//Energy Storage Transducer Inputs
+
+extern AnalogIn vref_powercab;
+extern AnalogIn vref_supercap;
+extern AnalogIn vout_powercab;
+extern AnalogIn vout_supercap;
+
+//Lights
+
+extern DigitalOut FrontLight;
+extern DigitalOut BackLight;
 #endif
