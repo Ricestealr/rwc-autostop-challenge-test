@@ -120,9 +120,9 @@ void EnergyStorage()
     float energy_supercap = (1/2) * (current_supercap * current_supercap) * (t*t) / C;
     float energy_powercab = (1/2) * (current_powercab * current_powercab) * (t*t) / C;
     int scap = static_cast<int>(energy_supercap);
-    int pcab = static_cast<int>(energy_powercab);
-    remote.sendData(2,scap);
-    remote.sendData(2,pcab);
+    int pcab = static_cast<int>(current_powercab);//(current_powercab);
+    remote.sendData(9,scap);
+    remote.sendData(10,pcab);
     
 }
 

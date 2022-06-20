@@ -84,9 +84,9 @@ DigitalIn mainlinePressure(PH_1, PullUp);
 
 ///Eergy Storage;
 
-AnalogIn vref_powercab(PA_3);
+AnalogIn vref_powercab(PA_0);
 AnalogIn vref_supercap(PF_5);
-AnalogIn vout_powercab(PC_3);
+AnalogIn vout_powercab(PB_1);
 AnalogIn vout_supercap(PF_3);
 
 ///Lights
