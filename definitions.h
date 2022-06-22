@@ -85,12 +85,12 @@ extern DigitalIn mainlinePressure;
 
 
 //Energy Storage Transducer Inputs
-
+/*
 extern AnalogIn vref_powercab;
 extern AnalogIn vref_supercap;
 extern AnalogIn vout_powercab;
 extern AnalogIn vout_supercap;
-
+*/
 //Lights
 
 extern DigitalOut FrontLight;

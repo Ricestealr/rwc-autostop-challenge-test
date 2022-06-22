@@ -82,12 +82,13 @@ DigitalIn pressureSwitch3(PC_15, PullUp);
 //DigitalIn brakePressure(PH_0);      // NOT INSTALLED
 DigitalIn mainlinePressure(PH_1, PullUp);
 
-///Eergy Storage;
+/*//Energy Storage;
 
 AnalogIn vref_powercab(PA_0);
 AnalogIn vref_supercap(PF_5);
 AnalogIn vout_powercab(PB_1);
 AnalogIn vout_supercap(PF_3);
+*/
 
 ///Lights
 DigitalOut FrontLight(PB_14);

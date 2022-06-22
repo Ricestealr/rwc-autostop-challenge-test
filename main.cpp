@@ -111,6 +111,7 @@ void speedControl(int commandedSpeed) {
 }
 ///Energy Storage
 //energy storage display code
+/*
 void EnergyStorage()
 {
     float current_powercab=((2*vout_powercab)-vref_powercab)*250; //voltage change to current conversion
@@ -124,7 +125,8 @@ void EnergyStorage()
     remote.sendData(9,scap);
     remote.sendData(10,pcab);
     
-}
+} 
+*/
 
 
 int main() {
@@ -162,7 +164,7 @@ int main() {
       brakeControl(remote.braking);
       
       //Energy Storage Display
-      EnergyStorage();
+      //EnergyStorage();
 
       // SOUND WHISTLE IF WHISTLE BUTTON PRESSED
       if (remote.whistle == 0) {
