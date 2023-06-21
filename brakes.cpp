@@ -7,19 +7,19 @@ Brakes::Brakes()
 }
 void Brakes::FrontBrakeOn() //turns on front mechanical brake
 {
-    brakeValve22=0;
-    brakeValve32=1;
+    frontBrake=0;
+    backBrake=1;
 }
 
 void Brakes::RearBrakeOn() //turns on rear mechanical brake
 {
-    brakeValve22=1;
-    brakeValve32=0;
+    frontBrake=1;
+    backBrake=0;
 }
 void Brakes::BrakesOn() //turns on both mechanical brakes
 {
-    brakeValve22=0;
-    brakeValve32=0;
+    frontBrake=0;
+    backBrake=0;
 }
 
 void Brakes::ParkMode(Motor motor) //Disengage motor and apply friction brakes
@@ -29,10 +29,11 @@ void Brakes::ParkMode(Motor motor) //Disengage motor and apply friction brakes
 }
 void Brakes::MechanicalBraking(int brakeRate, Motor motor) //friction braking cases
 {
-switch (brakeRate) {
+    switch (brakeRate) 
+    {
         case 0:     // NO BRAKING
-          brakeValve32 = 1;//(PD_3)
-          brakeValve22 = 1;//(PC_0)
+          frontBrake = 1;//(PD_3)
+          backBrake = 1;//(PC_0)
           break;
 
         case 1:           //HALF BRAKING
@@ -46,10 +47,10 @@ switch (brakeRate) {
           break;
 
         default:    // NO BRAKING
-          brakeValve32 = 1;//(PD_3)
-          brakeValve22 = 1;//(PC_0)
+          frontBrake = 1;//(PC_0)
+          backBrake = 1;//(PD_3)
           break;
-          }
+    }
 }
 
 void Brakes::RegenControl(int ratecontrol,Motor motor) //graduated braking control
@@ -82,22 +83,24 @@ void Brakes::RegenControl(int ratecontrol,Motor motor) //graduated braking contr
     }
 void Brakes::EmergencyStop(Motor motor,RoundTrainCircuit rtc, bool emergencyStopActive)
 {
-    if (emergencyStopActive == false) {
+    if (emergencyStopActive == false) 
+    {
 
-    emergencyStopActive = true;
+        emergencyStopActive = true;
     
-    //Set brake throttle to zero before disconnected, think is why we had the runaway train imo
-    motor.throttle(0.0f);
+        //Set brake throttle to zero before disconnected, think is why we had the runaway train imo
+        motor.throttle(0.0f);
 
-    //Disengage motor
-    motor.disengage();
+        //Disengage motor
+        motor.disengage();
 
-    //Setting brakes to high
-    brakeValve22=0;
-    brakeValve32=0;
+        //Setting brakes to high
+        frontBrake=0;
+        backBrake=0;
     
-    if (rtc_output.read() == 1) {  //Check RTC pin out
-      rtc.getTriggerCause();        // Get RTC input status
-    }
+        if (rtc_output.read() == 1) 
+        {  //Check RTC pin out
+            rtc.getTriggerCause();        // Get RTC input status
+        }
   }
 }

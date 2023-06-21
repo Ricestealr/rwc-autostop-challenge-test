@@ -19,7 +19,8 @@ Remote::Remote(SPI& remoteControl, DigitalOut& remoteControlCS) : _remoteControl
     commsCheckTicker.attach(this, &Remote::commsCheck, 0.2);  // Run the commsCheck function every 0.1s with the commsCheckTicker. - &commsCheck = The address of the function to be attached and 0.1 = the interval
 }
 
-int Remote::sendData(int precursor, int data) {
+int Remote::sendData(int precursor, int data) 
+{
     int response  = 0;
     
     _remoteControlCS = 0;          // ENABLE REMOTE SPI
@@ -37,7 +38,8 @@ int Remote::sendData(int precursor, int data) {
     return response;
 }
 
-void Remote::commsCheck() {
+void Remote::commsCheck() 
+{
     // Send a random number to the controller and expect its square in return for valid operation.
     
     // Random number between 2 and 15. Reply should be the squared, and within the 1 byte size limit of 255 for SPI comms.
@@ -47,28 +49,25 @@ void Remote::commsCheck() {
     int actualResponse = 0;
     
     actualResponse = sendData(1, randomNumber);
+
     
-//    pc.printf("Random Number: %d\r\n", randomNumber);
-//    pc.printf("Expected: %d\r\n", expectedResponse);
-//    pc.printf("Actual: %d\r\n", actualResponse);
-    
-    if (actualResponse == expectedResponse) {
+    if (actualResponse == expectedResponse) 
+    {
+
         commsGood = true;
         commsFailures = 0;          // Reset consecutive failure count
     }
     else
     {
-//        pc.printf("Failed at: \r\n");
-//        pc.printf("Random Number: %d\r\n", randomNumber);
-//        pc.printf("Expected: %d\r\n", expectedResponse);
-//        pc.printf("Actual: %d\r\n", actualResponse);
+
         
-        if (commsFailures++ > 3) {            // Increment consecutive failure count
+        if (commsFailures++ > 3) 
+        {            // Increment consecutive failure count
             commsGood = false;              // Flag comms failure after 3 failures (> 0.3 seconds)
-//            pc.printf("Remote Comms Failure!\r\n");
+
         }
     }
-//    pc.printf("commsGood: %d\r\n", commsGood);
+
 }
 
 // CONVERT BYTE TO BITS
@@ -79,12 +78,14 @@ This function takes each bit and assigned it to a switch variable.
 */
 void Remote::ByteToBits(unsigned char character, bool *boolArray)
 {
-    for (int i=0; i < 8; ++i) {
+    for (int i=0; i < 8; ++i) 
+    {
         boolArray[i] = (character & (1<<i)) != 0;
     }   
 }
 
-void Remote::getSwitchStates() {
+void Remote::getSwitchStates() 
+{
     // GET THE SWITCH STATES FROM THE REMOTE CONTROL
 
     
@@ -115,22 +116,11 @@ void Remote::getSwitchStates() {
     whistle       = bitGroupB[0];
     innovation    = bitGroupB[1];
    
-//    pc.printf("Start: %d\n\r", start);
-//    pc.printf("Forward: %d\n\r", forward);
-//    pc.printf("Park: %d\n\r", park);
-//    pc.printf("Reverse: %d\n\r", reverse);
-//    pc.printf("Compressor: %d\n\r", compressor);
-//    pc.printf("AutoStop: %d\n\r", autoStop);
-//    pc.printf("Regen Brake: %d\n\r", regenBrake);
-//    pc.printf("Regen Throttle: %d\n\r", regenThrottle);
-//    pc.printf("Whistle: %d\n\r", whistle);
-//    pc.printf("Innovation: %d\n\r", innovation);
-//    pc.printf("Throttle: %d\n\r", throttle);
-//    pc.printf("Brake: %d\n\r", braking);
         
 }
         
-void Remote::setTime(int hr, int min, int sec, int day, int mon, int yr) {
+void Remote::setTime(int hr, int min, int sec, int day, int mon, int yr) 
+{
     _remoteControlCS = 0;
     
     _remoteControl.write(7);
@@ -152,21 +142,26 @@ void Remote::setTime(int hr, int min, int sec, int day, int mon, int yr) {
     _remoteControlCS = 1;   // DISABLE REMOTE SPI
 }
 
-void Remote::sendError(int error) {
+void Remote::sendError(int error) 
+{
 
     bool errorInBuffer = false;
     
-    for (int index = 0; index < errorIndex; index++) {
-        if (errorBuffer[index] == error) {
-            errorInBuffer == true;
+    for (int index = 0; index < errorIndex; index++) 
+    {
+        if (errorBuffer[index] == error) 
+        {
+            errorInBuffer = true;
             break;
         }
     }
     
-    if (errorInBuffer == false) {
+    if (errorInBuffer == false) 
+    {
         errorBuffer[errorIndex++] = error;
     }
-    else {
+    else 
+    {
         errorInBuffer = false;  // reset
     }
     

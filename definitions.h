@@ -72,27 +72,27 @@ extern DigitalOut contactCompressor;
 extern DigitalOut contactCapCharge;
 
 //mechanical braking and other air components.
-extern DigitalOut brakeValve32;
-extern DigitalOut brakeValve22;
-extern DigitalOut whistleValve32;
+extern DigitalOut frontBrake;
+extern DigitalOut backBrake;
+extern DigitalOut whistle;
 
 extern DigitalIn pressureSwitch1;
 extern DigitalIn pressureSwitch2;
 extern DigitalIn pressureSwitch3;
-//extern DigitalIn brakePressure;
+
 extern DigitalIn mainlinePressure;
 //
 
 
 //Energy Storage Transducer Inputs
-/*
+
 extern AnalogIn vref_powercab;
 extern AnalogIn vref_supercap;
 extern AnalogIn vout_powercab;
 extern AnalogIn vout_supercap;
-*/
+
 //Lights
 
-extern DigitalOut FrontLight;
-extern DigitalOut BackLight;
+extern DigitalOut frontLight;
+extern DigitalOut backLight;
 #endif

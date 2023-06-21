@@ -26,36 +26,43 @@ RoundTrainCircuit::RoundTrainCircuit(
 
 }
 
-void RoundTrainCircuit::getTriggerCause() {
+void RoundTrainCircuit::getTriggerCause() 
+{
 
-    if (deadman == 1) {
+    if (deadman == 1) 
+    {
         pc.printf("Deadman Switch Triggered\r\n");
-//        DigitalOut footswitchM1(PD_4);
-//        DigitalOut seatM1(PD_5);
+
     }
     
-    if (emergencyButtonLeft == 1) {
+    if (emergencyButtonLeft == 1) 
+    {
         pc.printf("Left Emergency Button Operated\r\n");
     }
     
-    if (emergencyButtonRight == 1) {
+    if (emergencyButtonRight == 1) 
+    {
         pc.printf("Right Emergency Button Operated\r\n");
     }
     
     
-    if (heatDetector == 1) {
+    if (heatDetector == 1) 
+    {
         pc.printf("Heat Detector Triggered\r\n");
     }
     
-    if (driverCord == 1) {
+    if (driverCord == 1) 
+    {
         pc.printf("Driver Cord Released\r\n");
     }
     
-    if (superCapOverVoltage == 1) {
+    if (superCapOverVoltage == 1) 
+    {
         pc.printf("Super Cap Reached Dangerous Levels\r\n");
     }
     
-    if (spare == 1) {
+    if (spare == 1) 
+    {
         pc.printf("Spare Input Triggered\r\n");
     }
 }

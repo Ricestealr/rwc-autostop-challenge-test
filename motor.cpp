@@ -38,7 +38,8 @@ Motor::Motor   (AnalogOut& motorAccelerator,
                 }
 
 
-void Motor::turnOn() {
+void Motor::turnOn() 
+{
     _keySwitch = 1;
 //    pc.printf("Motor Switched On\r\n");  
 }
@@ -48,41 +49,49 @@ void Motor::turnOff() {
 //    pc.printf("Motor Switched Off\r\n");  
 }
 
-void Motor::closeDeadman() {
+void Motor::closeDeadman() 
+{
     _footSwitch = 1;
     _seatSwitch = 1;
 }
 
-void Motor::releaseDeadman() {
+void Motor::releaseDeadman() 
+{
     _footSwitch = 0;
     _seatSwitch = 0;
 }
 
-void Motor::setForward() {
+void Motor::setForward() 
+{
     _directionFwd = 1;
     _directionRev = 0;
 //    pc.printf("Motor Set to Forward\r\n");  
 }
 
-void Motor::setPark() {
+void Motor::setPark() 
+{
     _directionFwd = 0;
     _directionRev = 0;
     
 //    pc.printf("Motor Set to Park\r\n"); 
 }
 
-void Motor::setReverse() {
+void Motor::setReverse() 
+{
     _directionFwd = 0;
     _directionRev = 1;
 //    pc.printf("Motor Set to Reverse\r\n"); 
 }
 
-void Motor::engage() {
+void Motor::engage() 
+{
 //    _contactMtr = 1;    
 //    pc.printf("Motor Contactor Engaged\r\n");   
 }
 
-void Motor::disengage() {
+void Motor::disengage() 
+{
+
 //    _contactMtr = 0;
     
     setPark();
@@ -90,7 +99,8 @@ void Motor::disengage() {
 //    pc.printf("Motor Disengaged\r\n");  
 }
 
-void Motor::setSpeedMode(int speed) {
+void Motor::setSpeedMode(int speed) 
+{
     switch (speed) {
         case 0:     // Clear limits
         
@@ -130,14 +140,16 @@ void Motor::setSpeedMode(int speed) {
     }
 }
 
-void Motor::throttle(float throttleRate) {
+void Motor::throttle(float throttleRate) 
+{
     // set the output voltage of the analog output pin specified as a percentage of Vcc (3.3V)
     _motorAccelerator = throttleRate;   // Analog value between 0.0f and 1.0f
 //    pc.printf("Throttling\r\n");
     
 }
 
-void Motor::brake(float brakeRate) {
+void Motor::brake(float brakeRate) 
+{
     _motorBrake = brakeRate;            // Analog value between 0.0f and 1.0f
 //    pc.printf("Motor Braking\r\n");
 }

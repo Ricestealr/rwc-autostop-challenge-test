@@ -16,3 +16,4 @@ class Brakes{ // Separate brakes class to implement friction and regen braking
     
     };
     
+    

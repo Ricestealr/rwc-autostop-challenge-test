@@ -24,19 +24,13 @@ class ChallengeMode {
         void autoStopTriggered();
         void autoStopControl();
         
-        // Innovation Mode
-        void innovationOn();
-        void innovationOff();
-        int innovationControl(int requestedThrottle);
         
         // VARIABLES
         bool regenThrottleActive;
         bool regenBrakingActive;
         bool autoStopActive;
-        bool innovationActive;
         
-        int autoStopCruiseSpeed;
-        int autoStopThrottle;
+
         bool autoStopInProgress;
     
     private:
@@ -44,7 +38,6 @@ class ChallengeMode {
         Dashboard& _dashboard;
         Remote& _remote;
         Motor& _motor1;
-//        Motor& _motor2;
         
         // AutoStop
         float targetDistance;
@@ -54,22 +47,7 @@ class ChallengeMode {
         float decelerationGradient;
         float requiredSpeed;
         
-        // Innovation
-        int innovationDistanceLimit;    // Distance(mm) from IR sensors to apply brakes
-        bool stopLoco;
-        
-        // IR Output voltages at various distances (for calibration purposes)
-        float voltageAt5500;
-        float voltageAt5000;
-        float voltageAt4500;
-        float voltageAt4000;
-        float voltageAt3500;
-        float voltageAt3000;
-        float voltageAt2500;
-        float voltageAt2000;
-        float voltageAt1500;
-        float voltageAt1000;
-        float voltageAt500;
+       
 };
 
 #endif
