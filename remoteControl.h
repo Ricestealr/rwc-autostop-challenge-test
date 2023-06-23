@@ -6,7 +6,7 @@
 class Remote{
     public:
         // CONSTRUCTOR
-        Remote(SPI& remoteControl, DigitalOut& remoteControlCS);
+        Remote(SPI& remoteControl, DigitalOut& remoteControlCS, SPI& lcdScreen, DigitalOut& lcdScreenCS);
         
         bool commsGood;                 // Successful Comms Between Nucleo and Remote Control
         
@@ -33,6 +33,9 @@ class Remote{
     private:
         SPI& _remoteControl;
         DigitalOut& _remoteControlCS;
+
+        SPI& _lcdScreen;
+        DigitalOut& _lcdScreenCS;
 
         int spiDelay;
         int commsFailures;                      // Number of consecutive remote comms failures

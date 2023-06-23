@@ -8,7 +8,7 @@
 #include "motor.h"
 #include "challenge.h"
 #include <sstream>
-#include "lcd.h"
+
 using std::string;
 
 //  SET UP REMOTE CONTROL COMMS
@@ -16,13 +16,13 @@ SPI remoteControl(PE_14, PE_13, PE_12);   // (SPI_MOSI, SPI_MISO, SPI_SCK)
 DigitalOut remoteControlCS(PE_11);    // (SPI_SS)
 
 //  SET UP lcd COMMS
-SPI lcd(PF_9, PF_8, PF_7);   // (SPI_MOSI, SPI_MISO, SPI_SCK)
-DigitalOut lcdCS(PF_6);    // (SPI_SS)
+SPI lcdScreen(PF_9, PF_8, PF_7);   // (SPI_MOSI, SPI_MISO, SPI_SCK)
+DigitalOut lcdScreenCS(PF_6);    // (SPI_SS)
 
 
 //  CREATE OBJECTS
-Remote remote(remoteControl, remoteControlCS);
-Lcd lcd1(lcd,lcdCS);
+Remote remote(remoteControl, remoteControlCS, lcdScreen, lcdScreenCS);
+
 Dashboard dashboard(hallSensor);
 RoundTrainCircuit rtc(rtc_1, rtc_2, rtc_3, rtc_4, rtc_5, rtc_6, rtc_7, rtc_override);
 Motor motor1(motorAccelerator, motorBrake, keySwitchM1, directionFwd, directionRev, footswitchM1, seatM1, inchFwdM1, speedLimit2M1, speedLimit3M1);
@@ -31,6 +31,8 @@ Brakes brakes;
 
 int driveMode = 2;// Drive mode - fwd(0), rev(1), park(2)
 bool emergencyStopActive = false; //default state for emergency stop being active
+
+int regenEnergy = 72000; //Capacitor start energy
 
 ////////FUNCTIONS
 
@@ -131,18 +133,28 @@ void EnergyStorage()
 {
     float current_powercab=((2*vout_powercab)-vref_powercab)*250; //voltage change to current conversion
     float current_supercap=((2*vout_supercap)-vref_supercap)*250;
+    float energy_supercap = 0;
     int t=1; //1 second interval
     int C= 250; //Capacitance Value
-    float energy_supercap = (1/2) * (current_supercap * current_supercap) * (t*t) / C;
-    float energy_powercab = (1/2) * (current_powercab * current_powercab) * (t*t) / C;
-    int scap = static_cast<int>(energy_supercap);
-    int pcab = static_cast<int>(current_powercab);//(current_powercab);
-    //remote.sendData(9,scap);
-    //remote.sendData(10,pcab);
-    //printf("Power Cab Current = %2f\n",current_powercab);
-    //printf("Super Cap Current = %2f\n",current_supercap);
-    remote.sendData(9,current_powercab);
-    remote.sendData(10,current_supercap);
+    if(current_supercap > 0)
+    {
+        energy_supercap = abs((1/2) * (current_supercap * current_supercap) * (t*t) / C);
+    }
+    
+    float energy_powercab = abs((1/2) * (current_powercab * current_powercab) * (t*t) / C);
+    //int scap = static_cast<int>(energy_supercap);
+    //int pcab = static_cast<int>(current_powercab);//(current_powercab);
+    if(challenge.regenBrakingActive == true)
+    {
+        regenEnergy += energy_supercap;
+    }
+    if(challenge.regenThrottleActive == true)
+    {
+        regenEnergy -= energy_supercap;
+    }
+
+    //pc.printf("Energy = %d \n",regenEnergy);
+    
     
 } 
 
@@ -190,7 +202,7 @@ int main()
       brakeControl(remote.braking);
       
       //Energy Storage Display
-      EnergyStorage();
+      //EnergyStorage();
 
       // SOUND WHISTLE IF WHISTLE BUTTON PRESSED
       remote.whistle == 0 ? whistle = 1 : whistle = 0;
@@ -198,9 +210,8 @@ int main()
       //  GET AND DISPLAY SPEED
       dashboard.getCurrentSpeed();
       remote.sendData(2, dashboard.currentSpeed);       // Send speed to remote
-      //sprintf(dataToSend, "%f", dashboard.currentSpeed);
-      lcd1.sendData(2,dashboard.currentSpeed);
-    
+      
+      remote.sendData(10,(regenEnergy/1000));
 
       // TOGGLE COMPRESSOR
       remote.compressor == 0 ? contactCompressor = 1 : contactCompressor = 0;
@@ -221,6 +232,8 @@ int main()
             if (remote.regenThrottle == 0 && remote.start == 0) 
             {    // TURN OFF IF ON
                 challenge.regenThrottleOn();
+                EnergyStorage();
+                remote.sendData(10,(regenEnergy/1000));
             }
       }
       else 
@@ -241,7 +254,9 @@ int main()
                 if (challenge.regenBrakingOn() == 0) 
                 {
                     remote.sendError('I');     // Send error to remote
-
+                    EnergyStorage();
+                    remote.sendData(10,(regenEnergy/1000));
+                    
                     //pc.printf("Regen Braking Off - SuperCaps are full\r\n");
                 }
             }
@@ -290,7 +305,6 @@ int main()
                 if (millis() - lastErrorMillis > 500) 
                 {
                     remote.sendError('A');   // SEND ERROR MESSAGE 'A' TO REMOTE
-                    lcd1.sendError('A');
                     lastErrorMillis = millis();
                 }
                 motor1.turnOff();

@@ -2,13 +2,16 @@
 #include "remoteControl.h"
 #include "definitions.h"
 
-Remote::Remote(SPI& remoteControl, DigitalOut& remoteControlCS) : _remoteControl(remoteControl), _remoteControlCS(remoteControlCS) {
+Remote::Remote(SPI& remoteControl, DigitalOut& remoteControlCS, SPI& lcdScreen, DigitalOut& lcdScreenCS) : _remoteControl(remoteControl), _remoteControlCS(remoteControlCS), _lcdScreen(lcdScreen), _lcdScreenCS(lcdScreenCS) {
     _remoteControl.format(8,0);    // FORMAT SPI AS 8-BIT DATA, SPI CLOCK MODE 0
+    _lcdScreen.format(8,0);
     const long arduinoClock = 16000000;
     long spiFrequency = arduinoClock / 4;
     _remoteControl.frequency(spiFrequency); // SET SPI CLOCK FREQUENCY
+    _lcdScreen.frequency(spiFrequency);
     
     _remoteControlCS = 1;   // DISABLE SLAVE
+    _lcdScreenCS = 1; // Disable Slave for LCD
     spiDelay = 600;    //DELAY BETWEEN SPI TRANSACTIONS (SO ARDUINO CAN KEEP UP WITH REQUESTS)
     
     commsGood = false;                 // Successful Comms Between Nucleo and Remote Control
@@ -33,6 +36,15 @@ int Remote::sendData(int precursor, int data)
     wait_us(spiDelay);
     
     _remoteControlCS = 1;         // DISABLE REMOTE SPI
+
+    if(precursor == 10)
+    {
+        _lcdScreenCS = 0;
+        _lcdScreen.write(data);
+        
+        wait_us(spiDelay);
+        _lcdScreenCS = 1;
+    }
 //    pc.printf("Disabling\r\n");
 
     return response;
