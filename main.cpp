@@ -412,6 +412,8 @@ int main()
                     remote.sendError('G');     // Send error to remote
                 }
         }
+
+        //Comment
         //Datalogger Chai Funciton
         //DisplaySerial();  // Enable if you want to know what is happening with the peripherals
       }   // END IF (SYSTEMON == TRUE)
