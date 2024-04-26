@@ -24,12 +24,14 @@ ChallengeMode::ChallengeMode(InterruptIn& autoStopTrigger, Dashboard& dashboard,
     autoStopActive = false;             // Flag is auto-stop mode is active
     autoStopInProgress = false;         // Flag if auto-stop track-side sensor has been detected and auto-stop is in progress
     targetDistance = 25.00f;            // How far in meters to bring the loco to a stop
-    remainingDistance = targetDistance; // How far the loco has left to go before reaching target distance
+    remainingDistance = targetDistance-_dashboard.currentDistance; // How far the loco has left to go before reaching target distance
     decelerationGradient = 0;           // Gradient of y=mx+c linear speed-distance curve that is used in this auto-stop version
     requiredSpeed = 0;                  // How fast the loco should be going according to y=mx+c line
     
     
 }    // CONSTRUCTOR
+
+
 
 void ChallengeMode::regenThrottleOn() 
 {
@@ -88,7 +90,7 @@ void ChallengeMode::autoStopOn()
 {
     // TURN ON AUTOSTOP MODE
     autoStopActive = true;                  // Flag that auto-stop mode is on
-    //pc.printf("Auto-Stop On\r\n");
+    printf("Auto-Stop On\r\n");
 }
 
 void ChallengeMode::autoStopTriggered()
@@ -99,28 +101,64 @@ void ChallengeMode::autoStopTriggered()
         autoStopInProgress = true;                                  // Flag that auto-stop is in progress and fully autonomous
         whistle = 1;
         _dashboard.currentDistance = 0.00f;                         // Reset the distance-travelled counter to 0
-        //pc.printf("Auto-Stop Triggered\r\n");
+        printf("Auto-Stop Triggered\r\n");
     }
 }
 
 void ChallengeMode::autoStopControl() 
 {
+
+    //pc.printf("Current Loop: %d\r\n", controlLoopCounter);          // Debug prints
+    printf("Current Speed (kph): %.2d\r\n", _dashboard.currentSpeed);
+    printf("Current Speed (mps): %.2f\r\n", _dashboard.currentSpeed/3.6f);
+    printf("Distance Travelled: %.2f\r\n", _dashboard.currentDistance);
+    printf("Time Passed: %.2f\r\n", _dashboard.passedTime);
+
     // FUNCTION TO MANAGE THE LOCO THROTTLE AND BRAKING WHEN AUTO-STOPPING
     remainingDistance = targetDistance - _dashboard.currentDistance;        // Calculate remaining distance from target distance
     
     // FOLLOWING DECELERATION GRADIENT
     
+    /* OLD CODE
     if (remainingDistance > 2.0f) 
     {    // IF OVER 3M FROM TARGET, CONTROL SPEED (1m + 2m sensor to nose of train)
     
         _motor1.throttle(0.3f);     // Apply 30% throttle
+        printf("Reduced throttle\r\n");
 
     }// if 
-    else 
+    else if (_dashboard.currentDistance > 20.0f) 
     {  // IF REACHED STOPPING TARGET AREA
-        rtc_Trigger = 0;        // APPLY EMERGENCY BRAKES
+        _motor1.throttle(0.0f);        // APPLY EMERGENCY BRAKES
+        _motor1.brake(0.5f);
+        rtc_Trigger = 0; 
+        printf("reduce speed\r\n");
+        
+    } */
 
+    //Apply full throttle for first 10m
+     _motor1.throttle(0.2f);     // Apply full throttle
+
+    // if (_dashboard.currentDistance > 10.0f)
+    // {
+    //     _motor1.throttle(0.3f);     // Apply 30% throttle
+    // }
+    // else if (_dashboard.currentDistance > 23.0f)
+    // {
+    //     _motor1.throttle(0.1f);     // Apply 10% throttle
+    // }
+    // else if (_dashboard.currentDistance > 24.0f)
+    // {
+    //     _motor1.throttle(0.0f);     // Apply 0% throttle
+    //     _motor1.brake(0.5f);     // Apply 50% brake
+    // }
+    if (_dashboard.currentDistance > 0.9f)
+    {
+        _motor1.throttle(0.0f);     // Apply 0% throttle
+        _motor1.brake(1.0f);     // Apply 100% brake
+        // rtc_Trigger = 0; // NOT SURE IF THIS IS NEEDED
     }
+
 
     /*switch((int)remainingDistance)
     {
@@ -138,7 +176,7 @@ void ChallengeMode::autoStopControl()
             break;
     }*/
     
-    //pc.printf("remainingDistance  %f\r\n", remainingDistance);
+    printf("remainingDistance  %f\r\n", remainingDistance);
 }
 
 void ChallengeMode::autoStopOff() 
@@ -147,5 +185,5 @@ void ChallengeMode::autoStopOff()
     autoStopActive = false;         // CLEAR AUTOSTOP MODE FLAG
     autoStopInProgress = false;     // CLEAR AUTOSTOPPING
     rtc_Trigger = 1;
-    //pc.printf("Auto-Stop Off\r\n");
+    printf("Auto-Stop Off\r\n");
 }

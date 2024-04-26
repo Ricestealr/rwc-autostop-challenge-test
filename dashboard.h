@@ -12,12 +12,13 @@ class Dashboard {
         
         int currentSpeed;
         float currentDistance;
+        float passedTime;
         
     private:
         InterruptIn& _hallSensor;
         Timer tachoTimer;
         int passedTime_ms;
-        float passedTime;
+        //float passedTime;
         float lastTime;
         float wheelFreq;
         float wheelCircumference;

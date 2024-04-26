@@ -183,10 +183,12 @@ int main()
   // Record last time error was sent
   unsigned long lastErrorMillis = 0;
 
+  challenge.autoStopOff(); // Turns off autostop on start-up and when deadman released
+
   //MainLoop
   while (1) 
   {
-
+    printf("test\r\n");
     while (remote.commsGood == true) 
     {
       /////Start Up///////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -288,10 +290,12 @@ int main()
       {
             remote.sendError('D');     // Send error to remote
             //lcd1.sendError('D');
+            /* Auto-stop now stopped outside loop
             if (remote.autoStop == 1) 
             {    // TURN ON IF OFF
                 challenge.autoStopOff();
             }
+            */
       }
 
       /////END OF TOGGLE CHECKS//////////////////////////////////////////////////////////////////////////////////////////////
